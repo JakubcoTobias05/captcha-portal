@@ -18,7 +18,7 @@ const ResetApiKey = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        'http://localhost:3001/api/v1/auth/reset-key',
+        'https://captcha-service-rjty.onrender.com/api/v1/auth/reset-key',
         { token } 
       );
       setNewApiKey(response.data.data.key);

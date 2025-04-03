@@ -25,7 +25,7 @@ const ForgotApiKey = () => {
     setIsSubmitting(true);
     
     try {
-      await axios.post('http://localhost:3001/api/v1/auth/forgot-key', { clientEmail: email });
+      await axios.post('https://captcha-service-rjty.onrender.com/api/v1/auth/forgot-key', { clientEmail: email });
       setMessage('Odkaz byl odeslán na váš email');
       setError('');
       setCooldown(60);

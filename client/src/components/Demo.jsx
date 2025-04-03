@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Demo.css';
 
 const Demo = () => {
   const [language, setLanguage] = useState('cs');
   const [animation, setAnimation] = useState('popup');
-  const [captchaType, setCaptchaType] = useState('textcaptcha');
+  const [captchaType, setCaptchaType] = useState('image'); // výchozí např. obrázková
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Ověření CAPTCHA a odeslání formuláře
+    // Sem přidejte logiku ověření CAPTCHA a odeslání formuláře
   };
+
+  useEffect(() => {
+    if (window.CaptchaWidget && typeof window.CaptchaWidget.init === 'function') {
+      window.CaptchaWidget.init();
+    }
+  }, [language, captchaType, animation]);
 
   return (
     <section className="main-container" id="main-container">
       <div className="main-text">
         <h4>Adaptivní CAPTCHA ukázky</h4>
-        <p>Flexibilní v ochraně proti botům, Různé typy variací</p>
+        <p>Flexibilní v ochraně proti botům, různé typy variací</p>
       </div>
       <div className="captcha-example">
         <div className="left-box">
@@ -31,34 +37,31 @@ const Demo = () => {
               <input type="radio" name="language" id="lang-en" checked={language === 'en'} onChange={() => setLanguage('en')} />
               <label htmlFor="lang-en">English</label>
             </div>
-            <h4>Animace</h4>
+            <h4>Typ CAPTCHA</h4>
             <div className="settings">
-              <input type="radio" name="animation" id="animation-popup" checked={animation === 'popup'} onChange={() => setAnimation('popup')} />
-              <label htmlFor="animation-popup">Pop-up</label>
-              <input type="radio" name="animation" id="animation-float" checked={animation === 'float'} onChange={() => setAnimation('float')} />
-              <label htmlFor="animation-float">Vynoření</label>
-              <input type="radio" name="animation" id="animation-bind" checked={animation === 'bind'} onChange={() => setAnimation('bind')} />
-              <label htmlFor="animation-bind">Na tlačítku</label>
-            </div>
-            <h4>Typy CAPTCHA</h4>
-            <div className="settings">
-              <input type="radio" name="captcha-type" id="textcaptcha" checked={captchaType === 'textcaptcha'} onChange={() => setCaptchaType('textcaptcha')} />
+              <input type="radio" name="captcha-type" id="textcaptcha" checked={captchaType === 'text'} onChange={() => setCaptchaType('text')} />
               <label htmlFor="textcaptcha">Textová</label>
-              <input type="radio" name="captcha-type" id="type-audiocaptcha" checked={captchaType === 'audiocaptcha'} onChange={() => setCaptchaType('audiocaptcha')} />
-              <label htmlFor="type-audiocaptcha">Zvuková</label>
-              <input type="radio" name="captcha-type" id="type-imgcatpcha" checked={captchaType === 'imgcatpcha'} onChange={() => setCaptchaType('imgcatpcha')} />
-              <label htmlFor="type-imgcatpcha">Obrázková</label>
-              <input type="radio" name="captcha-type" id="type-nocatpcha" checked={captchaType === 'nocatpcha'} onChange={() => setCaptchaType('nocatpcha')} />
-              <label htmlFor="type-nocatpcha">NoCaptcha</label>
+              <input type="radio" name="captcha-type" id="audiocaptcha" checked={captchaType === 'audio'} onChange={() => setCaptchaType('audio')} />
+              <label htmlFor="audiocaptcha">Zvuková</label>
+              <input type="radio" name="captcha-type" id="imagecaptcha" checked={captchaType === 'image'} onChange={() => setCaptchaType('image')} />
+              <label htmlFor="imagecaptcha">Obrázková</label>
+              <input type="radio" name="captcha-type" id="nocaptcha" checked={captchaType === 'nocaptcha'} onChange={() => setCaptchaType('nocaptcha')} />
+              <label htmlFor="nocaptcha">NoCaptcha</label>
             </div>
           </div>
         </div>
         <div className="right-box">
           <div className="header-box">
             <h3>CAPTCHA ukázka</h3>
-            <p>Klikněte na tlačítko dole pro ověření</p>
+            <p>Klikněte na tlačítko pro ověření</p>
           </div>
-          <div id="captcha-container" data-type={captchaType} data-animation={animation} data-language={language}>
+          <div id="captcha-container">
+            <div
+              data-captcha-widget
+              data-api-key="f918feaea1668ba3d760d9924e2d527f4bc65e221a08012f9fc13e5103ec672c"
+              data-lang={language}
+              data-type={captchaType}
+            ></div>
           </div>
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-box">
@@ -67,7 +70,9 @@ const Demo = () => {
             <div className="input-box">
               <input type="password" placeholder="**********" disabled />
             </div>
-            <button type="submit" className="login-button" disabled>Přihlásit se</button>
+            <button type="submit" className="login-button" disabled>
+              Přihlásit se
+            </button>
           </form>
         </div>
       </div>
