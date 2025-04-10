@@ -64,10 +64,9 @@
   flex-direction: column;
   padding: 20px;
   justify-content: center;
-  border-right: 1px solid black;
 }
 
-h3 {
+.header-box h3{
   color: black;
   font-weight: 800;
   text-align: center;
@@ -120,6 +119,7 @@ input[type=radio] {
 .right-box {
   flex: 1;
   display: flex;
+  border-left: 1px solid black;
   flex-direction: column;
   padding: 20px;
   justify-content: flex-start;
@@ -137,7 +137,7 @@ input[type=radio] {
   width: 100%;
 }
 
-.login-form input {
+.fakeInput {
   width: 250px;
   padding: 15px;
   box-sizing: border-box;
