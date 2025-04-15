@@ -1,25 +1,25 @@
 .api-container {
+  margin-top: 130px;
   padding: 2rem;
   box-sizing: border-box;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; 
+  align-items: flex-start; 
   background: var(--bg-color);
 }
 
 .api-card {
-  background: white;
+  background: #fff;
   box-sizing: border-box;
   padding: 2.5rem;
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 600px;
+  max-width: 600px; 
 }
 
 .api-title {
-  box-sizing: border-box;
   color: var(--main-color);
   text-align: center;
   margin-bottom: 2rem;
@@ -31,12 +31,12 @@
 }
 
 .input-group input {
-  box-sizing: border-box;
   width: 100%;
   padding: 1rem;
   border: 2px solid var(--second-color);
   border-radius: 0.5rem;
   font-size: 1rem;
+  box-sizing: border-box;
   transition: border-color 0.3s ease;
 }
 
@@ -150,10 +150,22 @@
 .error-message {
   color: #dc3545;
   background: #ffe3e6;
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
   margin-top: 1rem;
   text-align: center;
+  font-size: 0.9rem;
+}
+
+.error-message ul {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  text-align: left;
+}
+
+.error-message li {
+  margin-bottom: 5px;
 }
 
 .spin {
@@ -162,4 +174,14 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .api-container {
+    margin-top: 70px;
+  }
+
+  .api-title {
+    font-size: 1.5rem;
+  }
 }

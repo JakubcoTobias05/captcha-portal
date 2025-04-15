@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulář s CAPTCHA</title>
+  <style>
+    form { max-width: 500px; margin: 20px auto; }
+    input, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+    button:disabled { background: #ccc; }
+  </style>
+</head>
+<body>
+
+  <form id="my-form" action="" method="POST">
+    <input type="text" name="name" placeholder="Vaše jméno" required>
+    <input type="email" name="email" placeholder="Váš email" required>
+
+    <div data-captcha-widget 
+         data-api-key="891b0dfb35600e7350bc3f2d9579f326709c37e29c1215b0521063f43fd71226" 
+         data-lang="cs" 
+         data-type="image">
+    </div>
+
+    <input type="hidden" name="captcha_token" id="captcha_token">
+
+    <button id="submit-btn" type="submit" disabled>Odeslat formulář</button>
+  </form>
+
+  <script>
+    window.addEventListener('captchaVerified', function(e) {
+      document.getElementById('captcha_token').value = e.detail.token;
+      document.getElementById('submit-btn').disabled = false;
+    });
+  </script>
+</body>
+</html>
+
+<script defer src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script defer src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/captcha-widget@1.0.8/dist/captcha-widget.umd.js"></script>

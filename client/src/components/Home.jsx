@@ -4,7 +4,6 @@ import './Home.css';
 const Home = () => {
   return (
     <>
-      {/* Home Section */}
       <section className="home" id="home">
         <div className="home-text">
           <h1>Ochrana před boty<br /> <span> jednoduchou integrací</span></h1>
@@ -18,7 +17,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Try Demo Section */}
       <section className="trydemo" id="trydemo">
         <div className="main-text">
           <h2>Vyzkoušejte naši inteligentní CAPTCHA</h2>
@@ -45,7 +43,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Threats Section */}
       <section className="fraud">
         <div className="fraud_header">
           <h2>Proč je CAPTCHA důležitá?</h2>

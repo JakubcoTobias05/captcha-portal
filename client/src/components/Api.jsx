@@ -15,13 +15,26 @@ const Api = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name === 'websiteUrl') {
+      let newValue = value;
+      if (!/^https?:\/\//i.test(newValue) && formData.websiteUrl === "" && newValue.trim() !== "") {
+        newValue = "https://" + newValue;
+      }
+      setFormData(prev => ({ ...prev, [name]: newValue }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+  
+
+  const handleFocus = (e) => {
+    if (e.target.name === 'websiteUrl' && e.target.value.trim() === '') {
+      setFormData((prev) => ({ ...prev, websiteUrl: 'https://' }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -30,7 +43,6 @@ const Api = () => {
     setError(null);
 
     try {
-      // Normalizace URL
       let websiteUrl = formData.websiteUrl.trim();
       if (websiteUrl && !websiteUrl.startsWith('http')) {
         websiteUrl = `https://${websiteUrl}`;
@@ -69,6 +81,7 @@ const Api = () => {
       setIsLoading(false);
     }
   };
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(apiKey);
     setIsCopied(true);
@@ -93,21 +106,28 @@ const Api = () => {
 
         {error && (
           <div className="error-message">
-            <p><strong>⚠️ {error.message}</strong></p>
+            <p>
+              <strong>
+                <span role="img" aria-label="warning">⚠️</span> {error.message}
+              </strong>
+            </p>
             {error.details && (
               <ul>
                 {Object.entries(error.details).map(([field, msg]) => (
                   <li key={field}>
-                    <strong>{{
-                      clientName: 'Jméno',
-                      clientEmail: 'Email',
-                      websiteUrl: 'URL'
-                    }[field]}</strong>: {{
+                    <strong>
+                      {{
+                        clientName: 'Jméno',
+                        clientEmail: 'Email',
+                        websiteUrl: 'URL'
+                      }[field]}
+                    </strong>
+                    : {({
                       'JMÉNO_POVINNÉ': 'Vyplňte toto pole',
                       'NEVALIDNÍ_EMAIL': 'Neplatný formát e-mailu',
                       'URL_POVINNÁ': 'Vyplňte URL',
                       'URL_MUSÍ_OBSAHOVAT_PROTOKOL': 'Musí začínat http:// nebo https://'
-                    }[msg]}
+                    }[msg])}
                   </li>
                 ))}
               </ul>
@@ -155,6 +175,7 @@ const Api = () => {
               placeholder="https://www.example.com"
               value={formData.websiteUrl}
               onChange={handleChange}
+              onFocus={handleFocus}
               disabled={isSubmitted}
               autoComplete="url"
               required
@@ -200,7 +221,9 @@ const Api = () => {
                 {isCopied ? <FiCheck /> : <FiCopy />}
               </button>
             </div>
-            <p className="key-warning">⚠️ Uložte si klíč na bezpečné místo</p>
+            <p className="key-warning">
+              <span role="img" aria-label="warning">⚠️</span> Uložte si klíč na bezpečné místo
+            </p>
           </div>
         )}
 

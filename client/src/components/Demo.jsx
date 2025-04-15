@@ -1,28 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom/client';
+import { useNavigate } from 'react-router-dom';
 import './Demo.css';
 
-const Demo = () => {
-  const [language, setLanguage] = useState('cs');
-  const [captchaType, setCaptchaType] = useState('image');
-  const containerRef = useRef(null);
-  
-  const [captchaVerified, setCaptchaVerified] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const loadCaptchaScript = () => {
+  return new Promise((resolve, reject) => {
+    if (window.CaptchaWidget) return resolve();
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/captcha-widget@1.0.8/dist/captcha-widget.umd.js";
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+};
 
-  // Event listener na globální událost, která vrací token po ověření CAPTCHA
+const Demo = () => {
+  const [language] = useState('cs');
+  const [captchaType, setCaptchaType] = useState('image');
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [popup, setPopup] = useState(null);
+  
+  const [email] = useState('johndoe@example.com');
+  const [password] = useState('**********');
+  
+  const containerRef = useRef(null);
+
   useEffect(() => {
-    const onCaptchaVerified = (e) => {
-      setCaptchaToken(e.detail.token);
+    const handleCaptchaVerified = () => {
       setCaptchaVerified(true);
     };
-    window.addEventListener('captchaVerified', onCaptchaVerified);
-    return () => window.removeEventListener('captchaVerified', onCaptchaVerified);
+    window.addEventListener('captchaVerified', handleCaptchaVerified);
+    return () => {
+      window.removeEventListener('captchaVerified', handleCaptchaVerified);
+    };
   }, []);
 
-  // Při změně jazyka nebo typu CAPTCHA vymažeme kontejner a vložíme nový widgetový element
   useEffect(() => {
+    loadCaptchaScript()
+      .then(() => {
+        setTimeout(() => {
+          if (window.CaptchaWidget && typeof window.CaptchaWidget.init === "function") {
+            window.CaptchaWidget.init();
+          }
+        }, 1000);
+      })
+      .catch((err) => console.error("Chyba při načítání skriptu:", err));
+
     if (containerRef.current) {
       containerRef.current.innerHTML = "";
       const widgetDiv = document.createElement("div");
@@ -32,21 +56,23 @@ const Demo = () => {
       widgetDiv.setAttribute("data-type", captchaType);
       containerRef.current.appendChild(widgetDiv);
     }
-    // Po krátkém zpoždění inicializujeme widget
-    const timer = setTimeout(() => {
-      if (window.CaptchaWidget && typeof window.CaptchaWidget.init === "function") {
-        window.CaptchaWidget.init();
-      } else {
-        console.warn("CaptchaWidget není k dispozici.");
-      }
-    }, 500);
-    return () => clearTimeout(timer);
   }, [language, captchaType]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Tady můžete odeslat formulář spolu s captchaToken (captchaVerified === true)
-    console.log("Email:", email, "Heslo:", password, "Captcha Token:", captchaToken);
+    if (!captchaVerified) {
+      setPopup({ message: "Prosím ověřte, že nejste robot", type: "error" });
+      setTimeout(() => setPopup(null), 5000);
+      return;
+    }
+    setPopup({ message: "CAPTCHA ověřena, požadavek odeslán", type: "success" });
+    setTimeout(() => setPopup(null), 5000);
+    console.log("Formulář odeslán. CAPTCHA ověřena:", captchaVerified);
+  };
+
+  const handleCaptchaTypeChange = (newType) => {
+    setCaptchaType(newType);
+    setCaptchaVerified(false);
   };
 
   return (
@@ -54,32 +80,72 @@ const Demo = () => {
       <div className="demo-card">
         <div className="header-box">
           <h3>CAPTCHA ukázka</h3>
-          <p>Klikněte na tlačítko pro ověření</p>
+          <p>Klikněte na tlačítko a ověřte se pomocí CAPTCHA</p>
+        </div>
+        <div className="radio-group">
+          <button
+            type="button"
+            className={`radio-button ${captchaType === 'image' ? 'active' : ''}`}
+            onClick={() => handleCaptchaTypeChange('image')}
+          >
+            Image
+          </button>
+          <button
+            type="button"
+            className={`radio-button ${captchaType === 'text' ? 'active' : ''}`}
+            onClick={() => handleCaptchaTypeChange('text')}
+          >
+            Text
+          </button>
+          <button
+            type="button"
+            className={`radio-button ${captchaType === 'audio' ? 'active' : ''}`}
+            onClick={() => handleCaptchaTypeChange('audio')}
+          >
+            Audio
+          </button>
+          <button
+            type="button"
+            className={`radio-button ${captchaType === 'nocaptcha' ? 'active' : ''}`}
+            onClick={() => handleCaptchaTypeChange('nocaptcha')}
+          >
+            NoCaptcha
+          </button>
         </div>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
             <input
               type="email"
-              placeholder="johndoe69@gmail.com"
+              id="email"
+              placeholder="johndoe@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={!captchaVerified}
+              disabled={true}
+              className="large-input"
             />
           </div>
           <div className="input-group">
             <input
               type="password"
+              id="password"
               placeholder="**********"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={!captchaVerified}
+              disabled={true}
+              className="large-input"
             />
           </div>
-          <div id="captcha-container" ref={containerRef}></div>
-          <button type="submit" className="login-button" disabled={!captchaVerified}>
+          <div className="my-captcha-container" id="captcha-container" ref={containerRef}></div>
+          <button 
+            type="submit" 
+            className="login-button"
+          >
             Přihlásit se
           </button>
         </form>
+        {popup && (
+          <div className={`popup-message ${popup.type}`}>
+            {popup.message}
+          </div>
+        )}
       </div>
     </section>
   );

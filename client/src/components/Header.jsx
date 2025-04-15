@@ -16,16 +16,32 @@ const Header = () => {
 
   return (
     <header className={isScrolled ? 'scrolled' : ''}>
-      <div className="logo">
-        <Link to="/"><img src="/img/logo.png" alt="Logo" /></Link>
-      </div>
-      <ul className={`navbar ${isMobileMenuOpen ? 'active' : ''}`}>
-        <li><Link to="/demo" onClick={() => setIsMobileMenuOpen(false)}>Demo</Link></li>
-        <li><Link to="/api-key-gen" onClick={() => setIsMobileMenuOpen(false)}>API</Link></li>
-        <li><a href="https://captcha-3.gitbook.io/captcha-docs/" target="_blank" rel="noopener noreferrer">Dokumentace</a></li>
-      </ul>
-      <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-        <i className='bx bx-menu'></i>
+      <div className="container">
+        <div className="logo">
+          <Link to="/"><img src="/img/logo.png" alt="Logo" /></Link>
+        </div>
+  
+        <ul className={`navbar ${isMobileMenuOpen ? 'active' : ''}`}>
+          <li><Link to="/demo" onClick={() => setIsMobileMenuOpen(false)}>Demo</Link></li>
+          <li><Link to="/api-key-gen" onClick={() => setIsMobileMenuOpen(false)}>API</Link></li>
+          <li>
+            <a
+              href="https://captcha-3.gitbook.io/captcha-docs/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Dokumentace
+            </a>
+          </li>
+        </ul>
+  
+        <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen 
+            ? <i className="bx bx-x"></i>
+            : <i className="bx bx-menu"></i>
+          }
+        </div>
       </div>
     </header>
   );

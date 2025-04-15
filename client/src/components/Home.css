@@ -1,15 +1,22 @@
 .home {
   height: 100vh;
-  width: 100%;
+  max-width: 100%;
   padding: 0 5%;
   position: relative;
-  background-image: url("../../public/img/bg3.jpg");
+  background-image: url('/img/bg3.jpg');
   background-color: var(--bg-color);
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .home .home-text {
@@ -286,3 +293,43 @@
       height: 70px;
   }
 }
+
+@media (max-width: 450px) {
+  .btn, .btn2 {
+    padding: 10px 20px;
+    font-size: 14px;  
+    margin-right: 5px;
+  }
+  
+  .box-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .box-content a {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 940px) and (min-width: 769px) {
+  .btn, .btn2 {
+    padding: 10px 15px;
+    font-size: 15px;
+  }
+
+  .box img {
+    width: 250px;
+    height: 250px;
+    border-radius: 0.7rem;
+    margin-right: 2rem;
+    object-fit: cover;
+  }
+  
+  .box-buttons {
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+}
+
