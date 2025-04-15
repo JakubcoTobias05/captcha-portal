@@ -49,7 +49,7 @@ const Demo = () => {
       containerRef.current.innerHTML = "";
       const widgetDiv = document.createElement("div");
       widgetDiv.setAttribute("data-captcha-widget", "");
-      widgetDiv.setAttribute("data-api-key", "891b0dfb35600e7350bc3f2d9579f326709c37e29c1215b0521063f43fd71226");
+      widgetDiv.setAttribute("data-api-key", "dc0c00d294fe9f152991367f778904b4bb6013d3835aee0615e5f83bb555d581");
       widgetDiv.setAttribute("data-lang", language);
       widgetDiv.setAttribute("data-type", captchaType);
       containerRef.current.appendChild(widgetDiv);
