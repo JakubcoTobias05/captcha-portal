@@ -15,7 +15,6 @@ const Api = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

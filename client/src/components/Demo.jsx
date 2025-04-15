@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom/client';
-import { useNavigate } from 'react-router-dom';
 import './Demo.css';
 
 const loadCaptchaScript = () => {
